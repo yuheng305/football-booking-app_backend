@@ -11,14 +11,24 @@
 // app.module.ts
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ClusterModule } from './cluster/cluster.module'; // ví dụ module bạn tạo
-import { OwnerModule } from './owner/owner.module'; // thêm module Owner vào đây
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ClusterModule } from './cluster/cluster.module';
+import { OwnerModule } from './owner/owner.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb+srv://huynguyen2004:3tjDjDwV828i3oRe@cluster0.uf4jyzj.mongodb.net/football?retryWrites=true&w=majority&appName=Cluster0'), // football là tên database
+    ConfigModule.forRoot({
+      isGlobal: true, // Cho phép dùng ở toàn bộ app
+    }),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        uri: configService.get<string>('DATABASE_URL'), // Lấy từ file .env
+      }),
+    }),
     ClusterModule,
-    OwnerModule, // thêm module Owner vào đây
+    OwnerModule,
   ],
 })
 export class AppModule {}
