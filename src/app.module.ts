@@ -14,6 +14,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClusterModule } from './cluster/cluster.module';
 import { OwnerModule } from './owner/owner.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { OwnerModule } from './owner/owner.module';
     }),
     ClusterModule,
     OwnerModule,
+    AuthModule,
   ],
 })
 export class AppModule {}

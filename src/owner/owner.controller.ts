@@ -1,9 +1,13 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { OwnerService } from './owner.service';
-import { ApiTags, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { ApiTags, ApiOkResponse, ApiOperation , ApiBearerAuth} from '@nestjs/swagger';
+import { JwtGuard } from 'src/auth/guard/jwt.guard';
 
+
+@UseGuards(JwtGuard)
 @ApiTags('owners')
 @Controller('owners')
+@ApiBearerAuth()
 export class OwnerController {
   constructor(private readonly ownerService: OwnerService) {}
 
