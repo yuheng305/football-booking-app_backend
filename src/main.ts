@@ -10,8 +10,14 @@ async function bootstrap() {
     .setTitle('Football API')
     .setDescription('API quản lý sân bóng đá và dịch vụ')
     .setVersion('1.0')
+    .addBearerAuth({
+      type: "http",
+      scheme: "bearer",
+      bearerFormat: "JWT", // Optional, but helps with documentation
+    })
     .addTag('clusters') // tag này để nhóm các endpoint
     .addTag('owners') // tag này để nhóm các endpoint
+    .addTag('auth') // tag này để nhóm các endpoint
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build-and-deploy:
@@ -16,7 +19,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # Hoặc 18, tùy bạn dùng version nào
+          node-version: '20'
 
       - name: Install dependencies
         run: npm install
@@ -28,6 +31,6 @@ jobs:
         run: npm run test
 
       - name: Trigger Render Deploy Hook
-        if: success()
+        if: github.event_name == 'push' && success()
         run: |
           curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
