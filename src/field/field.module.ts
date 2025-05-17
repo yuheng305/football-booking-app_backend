@@ -11,4 +11,4 @@ import { FieldController } from './field.controller';
   controllers: [FieldController],
   providers: [FieldService],
 })
-export class ClusterModule {}
+export class FieldModule {}

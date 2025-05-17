@@ -15,6 +15,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClusterModule } from './cluster/cluster.module';
 import { OwnerModule } from './owner/owner.module';
 import { AuthModule } from './auth/auth.module';
+import { BookingModule } from './booking/booking.module';
+import { Field } from './schemas/field.schema';
+import { FieldModule } from './field/field.module';
 
 @Module({
   imports: [
@@ -31,6 +34,8 @@ import { AuthModule } from './auth/auth.module';
     ClusterModule,
     OwnerModule,
     AuthModule,
+    BookingModule,
+    FieldModule,
   ],
 })
 export class AppModule {}

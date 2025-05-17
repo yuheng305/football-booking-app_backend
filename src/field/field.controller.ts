@@ -13,4 +13,23 @@ import { JwtGuard } from 'src/auth/guard/jwt.guard';
 export class FieldController {
   constructor(private readonly fieldService: FieldService) {}
 
+  @Get(':clusterId')
+  @ApiOperation({ summary: 'Get all fields in a cluster' })
+  @ApiResponse({ status: 200, description: 'Get all fields in a cluster successfully', type: [Field] })
+  async getAllFieldsInCluster(
+    @Param('clusterId') clusterId: string
+  ): Promise<Field[]> {
+    return this.fieldService.getAllFieldsInCluster(clusterId);
+  }
+
+  @Get(':fieldId/:date/:startHour')
+  @ApiOperation({ summary: 'Check field availability' })
+  @ApiResponse({ status: 200, description: 'Check field availability successfully' })
+  async checkFieldAvailability(
+    @Param('fieldId') fieldId: string,
+    @Param('date') date: string,
+    @Param('startHour') startHour: number
+  ): Promise<string> {
+    return this.fieldService.checkFieldAvailability(fieldId, date, startHour);
+  }
 }
