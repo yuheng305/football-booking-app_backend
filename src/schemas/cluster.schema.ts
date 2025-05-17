@@ -10,6 +10,7 @@ export class Cluster extends Document {
   @Prop({ required: true }) ownerId: string;
   @Prop({ required: true }) name: string;
   @Prop({ required: true }) address: string;
+  @Prop({ required: true }) city: string;
   @Prop([FieldSchema]) fields: Field[];
   @Prop([StaticService]) staticServices: StaticService[];
   @Prop([DynamicService]) dynamicServices: DynamicService[];

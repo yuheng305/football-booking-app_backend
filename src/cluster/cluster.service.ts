@@ -12,4 +12,8 @@ export class ClusterService {
   async getAllClusters() {
     return this.clusterModel.find().exec();
   }
+
+  async getClusterByCity(city: string) {
+    return this.clusterModel.find({ city }).exec();
+  }
 }

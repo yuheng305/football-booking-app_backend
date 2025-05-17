@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { ClusterService } from './cluster.service';
 import { Cluster } from '../schemas/cluster.schema';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
@@ -19,5 +19,12 @@ export class ClusterController {
   async getAll(@GetUser() JwtPayLoad): Promise<Cluster[]> {
     return this.clusterService.getAllClusters();
 
+  }
+
+  @Get(':city')
+  @ApiOperation({ summary: 'Lấy danh sách cụm sân theo thành phố' })
+  @ApiResponse({ status: 200, description: 'Danh sách cụm sân theo thành phố trả về thành công' })
+  async getByCity(@GetUser() JwtPayLoad, @Param('city') city: string): Promise<Cluster[]> {
+    return this.clusterService.getClusterByCity(city);
   }
 }
