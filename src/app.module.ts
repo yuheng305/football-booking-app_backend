@@ -18,6 +18,8 @@ import { AuthModule } from './auth/auth.module';
 import { BookingModule } from './booking/booking.module';
 import { Field } from './schemas/field.schema';
 import { FieldModule } from './field/field.module';
+import { User } from './schemas/user.schema';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -36,6 +38,7 @@ import { FieldModule } from './field/field.module';
     AuthModule,
     BookingModule,
     FieldModule,
+    UserModule,
   ],
 })
 export class AppModule {}
