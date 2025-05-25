@@ -13,8 +13,8 @@ export class FieldDto {
   @ApiProperty({ example: false, description: 'Trạng thái bảo trì' })
   isMaintain: boolean;
 
-  @ApiProperty({ example: '6809ccab4b5c931746abcf32', description: 'ID chủ sở hữu sân' })
-  ownerId: string;
+  @ApiProperty({ example: '6809b04e7456305b0fb34f5b', description: 'ID chủ sở hữu sân' })
+  clusterId: string;
 
   @ApiProperty({
     type: [Object], // Bạn có thể thay bằng ScheduleDto nếu có

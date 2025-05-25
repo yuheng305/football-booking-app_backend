@@ -43,7 +43,7 @@ export class FieldService {
   async createField(createFieldDto: FieldDto): Promise<Field> {
   const newField = new this.fieldModel({
     name: createFieldDto.name,
-    ownerId: createFieldDto.ownerId,
+    clusterId: createFieldDto.clusterId,
     isMaintain: createFieldDto.isMaintain,
     openHour: createFieldDto.openHour,
     closeHour: createFieldDto.closeHour,
