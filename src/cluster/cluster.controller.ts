@@ -27,4 +27,11 @@ export class ClusterController {
   async getByCity(@GetUser() JwtPayLoad, @Param('city') city: string): Promise<Cluster[]> {
     return this.clusterService.getClusterByCity(city);
   }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Lấy thông tin cụm sân theo ownerID' })
+  @ApiResponse({ status: 200, description: 'Thông tin cụm sân trả về thành công', type: Cluster })
+  async getById(@Param('id') id: string): Promise<Cluster[]> {
+    return this.clusterService.getClusterById(id);
+  }
 }

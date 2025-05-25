@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { FieldService } from './field.service';
 import { Field } from '../schemas/field.schema';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { GetUser } from 'src/common/decorators/get-user.decorator';
 import { JwtPayLoad } from 'src/common/model/jwt.payload';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
@@ -17,6 +17,12 @@ export class FieldController {
   @Get(':clusterId')
   @ApiOperation({ summary: 'Get all fields in a cluster' })
   @ApiResponse({ status: 200, description: 'Get all fields in a cluster successfully', type: [Field] })
+  @ApiParam({
+  name: 'clusterId',
+  required: true,
+  description: 'The ID of the cluster to fetch fields from',
+  example: '6809b04e7456305b0fb34f5b',
+  })
   async getAllFieldsInCluster(
     @Param('clusterId') clusterId: string
   ): Promise<Field[]> {
@@ -26,6 +32,7 @@ export class FieldController {
   @Get(':fieldId/:date/:startHour')
   @ApiOperation({ summary: 'Check field availability' })
   @ApiResponse({ status: 200, description: 'Check field availability successfully' })
+  
   async checkFieldAvailability(
     @Param('fieldId') fieldId: string,
     @Param('date') date: string,
