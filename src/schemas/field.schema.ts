@@ -3,7 +3,7 @@ import { Document } from 'mongoose';
 
 
 @Schema()
-class Field {
+export class Field extends Document {
   @Prop({ required: true }) name: string;
   // @Prop({ default: 'available' }) status: 'available' | 'booked' | 'maintenance';
   @Prop({ required: true }) openHour: number;  // e.g., 7 (for 7:00)
@@ -12,4 +12,4 @@ class Field {
   @Prop({ required: true }) clusterId: string; // e.g., userId or username
 }
 export const FieldSchema = SchemaFactory.createForClass(Field);
-export { Field };
+// export { Field };

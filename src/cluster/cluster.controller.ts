@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards, Post, Query } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards, Post, Query, Delete } from '@nestjs/common';
 import { ClusterService } from './cluster.service';
 import { Cluster } from '../schemas/cluster.schema';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
@@ -25,14 +25,21 @@ export class ClusterController {
 
   }
 
-  @Get(':city')
+  @Get('/:clusterId')
+  @ApiOperation({ summary: 'Lấy thông tin cụm sân theo clusterId' })
+  @ApiResponse({ status: 200, description: 'Thông tin cụm sân trả về thành công', type: Cluster })
+  async getByClusterId(@GetUser() JwtPayLoad, @Param('clusterId') clusterId: string): Promise<Cluster | null> {
+    return this.clusterService.getClusterByClusterId(clusterId);
+  }
+
+  @Get('/city/:city')
   @ApiOperation({ summary: 'Lấy danh sách cụm sân theo thành phố' })
   @ApiResponse({ status: 200, description: 'Danh sách cụm sân theo thành phố trả về thành công' })
   async getByCity(@GetUser() JwtPayLoad, @Param('city') city: string): Promise<Cluster[]> {
     return this.clusterService.getClusterByCity(city);
   }
 
-  @Get(':id')
+  @Get('/owner/:ownerId')
   @ApiOperation({ summary: 'Lấy thông tin cụm sân theo ownerID' })
   @ApiResponse({ status: 200, description: 'Thông tin cụm sân trả về thành công', type: Cluster })
   async getById(@Param('id') id: string): Promise<Cluster[]> {
@@ -74,4 +81,40 @@ export class ClusterController {
   ): Promise<Cluster> {
     return this.clusterService.addDynamicServiceToCluster(clusterId, name, price);
   }
+
+  // Edit static service
+  @Post(':clusterId/static-services/edit')
+  @ApiOperation({ summary: 'Chỉnh sửa dịch vụ tĩnh của cụm sân' })
+  @ApiResponse({ status: 200, description: 'Dịch vụ tĩnh được chỉnh sửa thành công', type: Cluster })
+  async editStaticService(
+    @Param('clusterId') clusterId: string,
+    @Query('name') name: string,
+    @Query('price') price: number
+  ): Promise<Cluster> {
+    return this.clusterService.editStaticService(clusterId, name, price);
+  }
+
+  // Edit dynamic service
+  @Post(':clusterId/dynamic-services/edit')
+  @ApiOperation({ summary: 'Chỉnh sửa dịch vụ động của cụm sân' })
+  @ApiResponse({ status: 200, description: 'Dịch vụ động được chỉnh sửa thành công', type: Cluster })
+  async editDynamicService(
+    @Param('clusterId') clusterId: string,
+    @Query('name') name: string,
+    @Query('price') price: number
+  ): Promise<Cluster> {
+    return this.clusterService.editDynamicService(clusterId, name, price);
+  }
+
+  //delete dynamic service
+  @Delete(':clusterId/dynamic-services/delete')
+  @ApiOperation({ summary: 'Xóa dịch vụ động của cụm sân' })
+  @ApiResponse({ status: 200, description: 'Dịch vụ động được xóa thành công', type: Cluster })
+  async deleteDynamicService(
+    @Param('clusterId') clusterId: string,
+    @Query('name') name: string
+  ): Promise<Cluster> {
+    return this.clusterService.deleteDynamicService(clusterId, name);
+  }
+
 }

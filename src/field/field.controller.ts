@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { FieldService } from './field.service';
 import { Field } from '../schemas/field.schema';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery } from '@nestjs/swagger';
@@ -82,5 +82,24 @@ export class FieldController {
     @Query('hour') hour: number
   ): Promise<FieldResponseDto[]> {
     return this.fieldService.getAllFieldsInClusterByDateAndHour(clusterId, date, hour);
+  }
+
+  @Get(':ownerId/all')
+  @ApiOperation({ summary: 'Get all fields of a owner' })
+  @ApiResponse({ status: 200, description: 'Get all fields of a owner successfully', type: [Field] })
+  async getAllFieldsOfOwner(
+    @Param('ownerId') ownerId: string
+  ): Promise<Field[]> {
+    return this.fieldService.getAllFieldsOfOwner(ownerId);
+  }
+
+  //delete field
+  @Delete(':fieldId/delete')
+  @ApiOperation({ summary: 'Delete a field' })
+  @ApiResponse({ status: 200, description: 'Field deleted successfully', type: Field })
+  async deleteField(
+    @Param('fieldId') fieldId: string
+  ): Promise<string> {
+    return this.fieldService.deleteField(fieldId);
   }
 }

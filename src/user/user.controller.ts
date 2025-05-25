@@ -1,7 +1,8 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiTags, ApiOkResponse, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
+import { UserDto } from 'src/auth/dto/user.dto';
 
 @UseGuards(JwtGuard)
 @ApiTags('users')
@@ -37,6 +38,12 @@ export class UserController {
   @ApiOperation({ summary: 'Lấy thông tin người dùng theo ID' })
   async getUserById(@Param('id') id: string) {
     return this.userService.getUserById(id);
+  }
+
+  @Post(':id/edit')
+  @ApiOperation({ summary: 'Chỉnh sửa thông tin người dùng theo ID' })
+  async editUser(@Param('id') id: string, @Body() dto: UserDto) {
+    return this.userService.editUser(id, dto);
   }
   
 }

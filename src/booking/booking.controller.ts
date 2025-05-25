@@ -15,7 +15,7 @@ import { BookingDto } from '../auth/dto/booking.dto';
 export class BookingController {
   constructor(private readonly bookingService: BookingService) {}
   
-  @Get(':userId')
+  @Get('/user/:userId')
   @ApiOperation({ summary: 'Get all bookings by user ID' })
   @ApiResponse({ status: 200, description: 'List of bookings', type: [Booking] })
   async getAllBookingsByUserId(@Param('userId') userId: string): Promise<Booking[]> {
@@ -23,7 +23,7 @@ export class BookingController {
   }
 
   @Get(':bookingId')
-  @ApiOperation({ summary: 'Get booking by ID' })
+  @ApiOperation({ summary: 'Get booking by bookingID' })
   @ApiResponse({ status: 200, description: 'Booking details', type: Booking })
   async getBookingById(@Param('bookingId') bookingId: string): Promise<Booking> {
     return this.bookingService.getBookingById(bookingId);
@@ -36,5 +36,36 @@ export class BookingController {
     @Body() dto: BookingDto,
   ): Promise<Booking> {
     return this.bookingService.createBooking(dto);
+  }
+
+  @Post(':bookingId/payment')
+  @ApiOperation({ summary: 'Update booking payment status from pending to completed after payment' })
+  @ApiResponse({ status: 200, description: 'Booking payment status updated', type: Booking })
+  async updateBookingPayment(@Param('bookingId') bookingId: string): Promise<Booking> {
+    return this.bookingService.updateBookingPayment(bookingId);
+  }
+
+  // Get all bookings by ownerId
+  @Get('/owner/:ownerId')
+  @ApiOperation({ summary: 'Get all bookings by owner ID' })
+  @ApiResponse({ status: 200, description: 'List of bookings for the owner', type: [Booking] })
+  async getAllBookingsByOwnerId(@Param('ownerId') ownerId: string): Promise<Booking[]> {
+    return this.bookingService.getAllBookingsByOwnerId(ownerId);
+  }
+
+  //get all completed bookings by ownerId
+  @Get('/owner/:ownerId/completed')
+  @ApiOperation({ summary: 'Get all completed bookings by owner ID' })
+  @ApiResponse({ status: 200, description: 'List of completed bookings for the owner', type: [Booking] })
+  async getAllCompletedBookingsByOwnerId(@Param('ownerId') ownerId: string): Promise<Booking[]> {
+    return this.bookingService.getAllCompletedBookingsByOwnerId(ownerId);
+  }
+
+  //get all pending bookings by ownerId
+  @Get('/owner/:ownerId/pending')
+  @ApiOperation({ summary: 'Get all pending bookings by owner ID' })
+  @ApiResponse({ status: 200, description: 'List of pending bookings for the owner', type: [Booking] })
+  async getAllPendingBookingsByOwnerId(@Param('ownerId') ownerId: string): Promise<Booking[]> {
+    return this.bookingService.getAllPendingBookingsByOwnerId(ownerId);
   }
 }
