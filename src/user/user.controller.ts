@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiTags, ApiOkResponse, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
@@ -32,4 +32,11 @@ export class UserController {
   async getAllUsers() {
     return this.userService.getAllBasicInfo(); // hoặc findAll() tuỳ theo bạn
   }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Lấy thông tin người dùng theo ID' })
+  async getUserById(@Param('id') id: string) {
+    return this.userService.getUserById(id);
+  }
+  
 }

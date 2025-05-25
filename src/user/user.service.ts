@@ -10,4 +10,8 @@ export class UserService {
   async getAllBasicInfo() {
     return this.userModel.find({}, 'fullName username phone email clusterName address').exec();
   }
+
+  async getUserById(id: string) {
+    return this.userModel.findById(id).exec();
+  }
 }

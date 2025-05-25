@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { OwnerService } from './owner.service';
 import { ApiTags, ApiOkResponse, ApiOperation , ApiBearerAuth} from '@nestjs/swagger';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
@@ -33,5 +33,15 @@ export class OwnerController {
   })
   async getAllOwners() {
     return this.ownerService.getAllBasicInfo(); // hoặc findAll() tuỳ theo bạn
+  }
+
+
+
+
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Lấy thông tin chủ sân theo ID' })
+  async getOwnerById(@Param('id') id: string) {
+    return this.ownerService.getOwnerById(id);
   }
 }

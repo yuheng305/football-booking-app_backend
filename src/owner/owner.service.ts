@@ -10,4 +10,8 @@ export class OwnerService {
   async getAllBasicInfo() {
     return this.ownerModel.find({}, 'fullName username phone email clusterName address').exec();
   }
+
+  async getOwnerById(id: string) {
+    return this.ownerModel.findById(id).exec();
+}
 }
