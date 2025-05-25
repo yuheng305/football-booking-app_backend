@@ -31,8 +31,8 @@ export class AuthController {
     if (!user) throw new BadRequestException("Tên người dùng không tồn tại!");
     if (password !== user.password) throw new BadRequestException("Mật khẩu không đúng!");
 
-    const token = await this.authService.signToken(user.email);
-
+    const token = await this.authService.signToken(user._id);
+    console.log("token", token);
     return {
       message: "Đăng nhập thành công!",
       user,
@@ -62,12 +62,9 @@ export class AuthController {
       phone,
     });
 
-    const token = await this.authService.signToken(newUser.email);
-
     return {
       message: "Đăng ký thành công!",
-      user: newUser,
-      token,
+      user: newUser
     };
   }
 }

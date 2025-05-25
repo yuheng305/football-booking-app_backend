@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Field } from '../schemas/field.schema';
+import { FieldDto } from 'src/auth/dto/field.dto';
 
 @Injectable()
 export class FieldService {
@@ -39,4 +40,17 @@ export class FieldService {
 
     return 'available';
   }
+  async createField(createFieldDto: FieldDto): Promise<Field> {
+  const newField = new this.fieldModel({
+    name: createFieldDto.name,
+    ownerId: createFieldDto.ownerId,
+    isMaintain: createFieldDto.isMaintain,
+    openHour: createFieldDto.openHour,
+    closeHour: createFieldDto.closeHour,
+    schedules: [] // Initialize schedules if not part of DTO
+  });
+
+  return newField.save();
+}
+  
 }

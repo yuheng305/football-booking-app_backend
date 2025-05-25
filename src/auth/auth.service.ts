@@ -10,9 +10,9 @@ export class AuthService {
     private configService: ConfigService, // <--- thêm lại vào constructor
   ) {}
 
-  async signToken(email: string) {
+  async signToken(userid: string) {
     const tokenPayload = {
-      email: email,
+      email: userid,
     } as JwtPayLoad;
 
     return this.jwtService.signAsync(tokenPayload, {

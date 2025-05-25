@@ -27,6 +27,7 @@ class Field {
   @Prop({ required: true }) openHour: number;  // e.g., 7 (for 7:00)
   @Prop({ required: true }) closeHour: number; // e.g., 22
   @Prop({ required: true }) isMaintain: boolean;
+  @Prop({ required: true }) ownerId: string; // e.g., userId or username
   @Prop([Schedule]) schedules: Schedule[];
 }
 export const FieldSchema = SchemaFactory.createForClass(Field);
