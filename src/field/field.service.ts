@@ -52,5 +52,34 @@ export class FieldService {
 
   return newField.save();
 }
-  
+  async updateFieldToAvailable(fieldId: string): Promise<Field> {
+    const field = await this.fieldModel.findById(fieldId).exec();
+    if (!field) {
+      throw new Error('Field not found');
+    }
+    field.isMaintain = false;
+    return field.save();
+  }
+
+  async updateFieldToMaintain(fieldId: string): Promise<Field> {
+    const field = await this.fieldModel.findById(fieldId).exec();
+    if (!field) {
+      throw new Error('Field not found');
+    }
+    field.isMaintain = true;
+    return field.save();
+  }
+
+  //edit field
+  async editField(fieldId: string, updateFieldDto: FieldDto): Promise<Field> {
+    const field = await this.fieldModel.findById(fieldId).exec();
+    if (!field) {
+      throw new Error('Field not found');
+    }
+    field.openHour = updateFieldDto.openHour || field.openHour;
+    field.closeHour = updateFieldDto.closeHour || field.closeHour;
+
+    return field.save();
+  }
+
 }

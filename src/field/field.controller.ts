@@ -45,4 +45,22 @@ export class FieldController {
   async createField(@Body() createFieldDto: FieldDto): Promise<Field> {
   return this.fieldService.createField(createFieldDto);
 }
+
+  @Post(':fieldId/available')
+  @ApiOperation({ summary: 'Update field to available' })
+  @ApiResponse({ status: 200, description: 'Field updated to available successfully', type: Field })
+  async updateFieldToAvailable(
+    @Param('fieldId') fieldId: string
+  ): Promise<Field> {
+    return this.fieldService.updateFieldToAvailable(fieldId);
+  }
+
+  @Post(':fieldId/maintenance')
+  @ApiOperation({ summary: 'Update field to maintenance' })
+  @ApiResponse({ status: 200, description: 'Field updated to maintenance successfully', type: Field })
+  async updateFieldToMaintenance(
+    @Param('fieldId') fieldId: string
+  ): Promise<Field> {
+    return this.fieldService.updateFieldToMaintain(fieldId);
+  }
 }
