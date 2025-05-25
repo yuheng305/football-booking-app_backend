@@ -20,9 +20,11 @@ import { Field } from './schemas/field.schema';
 import { FieldModule } from './field/field.module';
 import { User } from './schemas/user.schema';
 import { UserModule } from './user/user.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true, // Cho phép dùng ở toàn bộ app
     }),
@@ -30,7 +32,7 @@ import { UserModule } from './user/user.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        uri: configService.get<string>('DATABASE_URL'), // Lấy từ file .env
+        uri: configService.get<string>('DATABASE_URL'), 
       }),
     }),
     ClusterModule,

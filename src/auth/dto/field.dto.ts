@@ -15,10 +15,4 @@ export class FieldDto {
 
   @ApiProperty({ example: '6809b04e7456305b0fb34f5b', description: 'ID chủ sở hữu sân' })
   clusterId: string;
-
-  @ApiProperty({
-    type: [Object], // Bạn có thể thay bằng ScheduleDto nếu có
-    description: 'Danh sách lịch đặt sân'
-  })
-  schedules: any[]; // Thay bằng ScheduleDto[] nếu có định nghĩa
 }

@@ -3,43 +3,21 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Field } from '../schemas/field.schema';
 import { FieldDto } from 'src/auth/dto/field.dto';
+import { FieldResponseDto } from 'src/auth/dto/fieldresponse.dto';
+import { Booking } from 'src/schemas/booking.schema';
 
 @Injectable()
 export class FieldService {
   constructor(
     @InjectModel(Field.name) private fieldModel: Model<Field>,
+    @InjectModel(Booking.name) private bookingModel: Model<Booking>,
   ) {}
 
   async getAllFieldsInCluster(clusterId: string): Promise<Field[]> {
     return this.fieldModel.find({ clusterId }).exec();
   }
 
-  async checkFieldAvailability(fieldId: string, date: string, startHour: number): Promise<string> {
-    const field = await this.fieldModel.findById(fieldId).exec();
-    
-    if (!field) {
-      throw new Error('Field not found');
-    }
 
-    if (field.isMaintain) {
-      return 'maintenance';
-    }
-
-    const schedules = field.schedules;
-    for (const schedule of schedules) {
-      if (schedule.date.toISOString().split('T')[0] === date) {
-        if (schedule.startTime <= startHour && schedule.endTime > startHour) {
-          if (schedule.status === 'looking') {
-            return 'looking';
-          }else if (schedule.status === 'booked') {
-            return 'booked';
-          }
-        }
-      }
-    }
-
-    return 'available';
-  }
   async createField(createFieldDto: FieldDto): Promise<Field> {
   const newField = new this.fieldModel({
     name: createFieldDto.name,
@@ -47,7 +25,6 @@ export class FieldService {
     isMaintain: createFieldDto.isMaintain,
     openHour: createFieldDto.openHour,
     closeHour: createFieldDto.closeHour,
-    schedules: [] // Initialize schedules if not part of DTO
   });
 
   return newField.save();
@@ -80,6 +57,34 @@ export class FieldService {
     field.closeHour = updateFieldDto.closeHour || field.closeHour;
 
     return field.save();
+  }
+
+  async getAllFieldsInClusterByDateAndHour(
+    clusterId: string,
+    date: string,
+    hour: number
+  ): Promise<FieldResponseDto[]> {
+    const fields = await this.fieldModel.find({ clusterId }).exec();
+    const bookings= await this.bookingModel.find({
+      date : date,
+      startHour: hour,
+    }).exec();
+    let fieldResponses: FieldResponseDto[] = [];
+    for( const field of fields) {
+      let slotbooked:number=0;
+      for (const booking of bookings) {
+        if (booking.fieldId.toString() === field._id.toString() && booking.status !== 'canceled') {
+          slotbooked++; 
+        }
+      }
+      fieldResponses.push({
+        field,
+        slotbooked
+      });
+    }
+
+
+    return fieldResponses;
   }
 
 }

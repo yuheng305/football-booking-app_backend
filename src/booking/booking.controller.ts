@@ -6,7 +6,7 @@ import { GetUser } from 'src/common/decorators/get-user.decorator';
 import { JwtPayLoad } from 'src/common/model/jwt.payload';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { User } from 'src/schemas/user.schema';
-import { BookingDto } from './dto/booking.dto';
+import { BookingDto } from '../auth/dto/booking.dto';
 
 @ApiTags('bookings') // <-- trùng với tag ở bước 2
 @UseGuards(JwtGuard)
