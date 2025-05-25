@@ -1,7 +1,7 @@
 import { BadRequestException, Body, Controller, Post, SetMetadata } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { AuthService } from "./auth.service";
-import { LoginDto } from "./dto/auth.dto";
+import { LoginDto, RegisterDto } from "./dto/auth.dto";
 import { ApiTags } from "@nestjs/swagger";
 import { InjectModel } from "@nestjs/mongoose";
 import { Owner } from "src/schemas/owner.schema";
@@ -42,31 +42,32 @@ export class AuthController {
   }
 
 
-  // @Post("register")
-  // async register(@Body() { username, email, password ,phone}: RegisterDto) {
-  //   // if (!username || !email || !password) throw new BadRequestException("Vui lòng điền đầy đủ thông tin!");
-  //   const existingUsername = await this.ownerModel.findOne({ username }).exec();
-  //   if (existingUsername) throw new BadRequestException("Tên người dùng đã tồn tại!");
+  @Post("register")
+  async register(@Body() { fullName, username, email, password ,phone}: RegisterDto) {
+    // if (!username || !email || !password) throw new BadRequestException("Vui lòng điền đầy đủ thông tin!");
+    const existingUsername = await this.userModel.findOne({ username }).exec();
+    if (existingUsername) throw new BadRequestException("Tên người dùng đã tồn tại!");
 
-  //   const existingUseremail = await this.ownerModel.findOne({ email }).exec();
-  //   if (existingUseremail) throw new BadRequestException("Email đã tồn tại!");
+    const existingUseremail = await this.userModel.findOne({ email }).exec();
+    if (existingUseremail) throw new BadRequestException("Email đã tồn tại!");
 
-  //   const existingUserphone = await this.ownerModel.findOne({ phone }).exec();
-  //   if (existingUserphone) throw new BadRequestException("Phone đã tồn tại!");
+    const existingUserphone = await this.userModel.findOne({ phone }).exec();
+    if (existingUserphone) throw new BadRequestException("Phone đã tồn tại!");
 
-  //   const newUser = await this.ownerModel.create({
-  //     username,
-  //     email,
-  //     password,
-  //     phone,
-  //   });
+    const newUser = await this.userModel.create({
+      fullName,
+      username,
+      email,
+      password,
+      phone,
+    });
 
-  //   const token = await this.authService.signToken(newUser.email);
+    const token = await this.authService.signToken(newUser.email);
 
-  //   return {
-  //     message: "Đăng ký thành công!",
-  //     user: newUser,
-  //     token,
-  //   };
-  // }
+    return {
+      message: "Đăng ký thành công!",
+      user: newUser,
+      token,
+    };
+  }
 }

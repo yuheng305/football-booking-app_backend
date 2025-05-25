@@ -18,23 +18,42 @@ export class LoginDto {
 }
 
 export class RegisterDto {
-  
+  @ApiProperty({
+    example: "Nguyen Van A",
+    description: "Họ và tên người dùng"
+  })
   @IsNotEmpty()
   @IsString()
   fullName: string;
 
+  @ApiProperty({
+    example: "username123",
+    description: "Tên đăng nhập"
+  })
   @IsNotEmpty()
   @IsString()
   username: string;
 
+  @ApiProperty({
+    example: "password123",
+    description: "Mật khẩu"
+  })
   @IsNotEmpty()
   @IsString()
   password: string;
 
+  @ApiProperty({
+    example: "0123456789",
+    description: "Số điện thoại"
+  })
   @IsNotEmpty()
   @IsString()
   phone: string;
 
+  @ApiProperty({
+    example: "user@example.com",
+    description: "Email người dùng"
+  })
   @IsNotEmpty()
   @IsEmail({}, { message: 'Invalid email address' })
   email: string;
