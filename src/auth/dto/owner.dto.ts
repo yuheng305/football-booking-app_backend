@@ -8,8 +8,8 @@ export class OwnerDto {
     @ApiProperty({ example: 'tranthib', description: 'Tên đăng nhập' })
     username: string;
 
-    @ApiProperty({ example: '12345678', description: 'Mật khẩu chủ sân' })
-    password: string;
+    // @ApiProperty({ example: '12345678', description: 'Mật khẩu chủ sân' })
+    // password: string;
 
     @ApiProperty({ example: '0987654321', description: 'Số điện thoại chủ sân' })
     phone: string;

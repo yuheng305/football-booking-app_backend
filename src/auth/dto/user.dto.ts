@@ -8,8 +8,8 @@ export class UserDto {
     @ApiProperty({ example: 'nguyenvana', description: 'Tên đăng nhập' })
     username: string;
     
-    @ApiProperty({ example: '12345678', description: 'Mật khẩu người dùng' })
-    password: string;
+    // @ApiProperty({ example: '12345678', description: 'Mật khẩu người dùng' })
+    // password: string;
     
     @ApiProperty({ example: '0123456789', description: 'Số điện thoại người dùng' })
     phone: string;

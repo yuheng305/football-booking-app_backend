@@ -1,12 +1,14 @@
 import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { BookingService } from './booking.service';
 import { Booking } from '../schemas/booking.schema';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { GetUser } from 'src/common/decorators/get-user.decorator';
 import { JwtPayLoad } from 'src/common/model/jwt.payload';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { User } from 'src/schemas/user.schema';
 import { BookingDto } from '../auth/dto/booking.dto';
+import { BookingResponseDto } from 'src/auth/dto/bookingresponse.dto';
+import { BookingHistoryDto } from 'src/auth/dto/bookinghistory.dto';
 
 @ApiTags('bookings') // <-- trùng với tag ở bước 2
 @UseGuards(JwtGuard)
@@ -18,14 +20,20 @@ export class BookingController {
   @Get('/user/:userId')
   @ApiOperation({ summary: 'Get all bookings by user ID' })
   @ApiResponse({ status: 200, description: 'List of bookings', type: [Booking] })
-  async getAllBookingsByUserId(@Param('userId') userId: string): Promise<Booking[]> {
+  @ApiParam({
+      name: 'userId',
+      required: true,
+      description: 'The ID of the user to fetch bookings for',
+      example: '6809cc764b5c931746abcf2d',
+  })
+  async getAllBookingsByUserId(@Param('userId') userId: string): Promise<BookingHistoryDto[]> {
     return this.bookingService.getAllBookingsByUserId(userId);
   }
 
   @Get(':bookingId')
   @ApiOperation({ summary: 'Get booking by bookingID' })
   @ApiResponse({ status: 200, description: 'Booking details', type: Booking })
-  async getBookingById(@Param('bookingId') bookingId: string): Promise<Booking> {
+  async getBookingById(@Param('bookingId') bookingId: string): Promise<BookingResponseDto> {
     return this.bookingService.getBookingById(bookingId);
   }
 

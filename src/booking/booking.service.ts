@@ -6,6 +6,8 @@ import { BookingDto } from 'src/auth/dto/booking.dto';
 import { Owner } from 'src/schemas/owner.schema';
 import { Cluster } from 'src/schemas/cluster.schema';
 import { Field } from 'src/schemas/field.schema';
+import { BookingResponseDto } from 'src/auth/dto/bookingresponse.dto';
+import { BookingHistoryDto } from 'src/auth/dto/bookinghistory.dto';
 
 @Injectable()
 export class BookingService {
@@ -36,16 +38,84 @@ export class BookingService {
     return booking.save();
   }
 
-  async getBookingById(id: string): Promise<Booking> {
+  async getBookingById(id: string): Promise<BookingResponseDto> {
     const booking = await this.bookingModel.findById(id).exec();
     if (!booking) {
       throw new NotFoundException(`Booking with ID ${id} not found`);
     }
-    return booking;
+    const cluster = await this.clusterModel.findById(booking.clusterId).exec();
+    if (!cluster) {
+      throw new NotFoundException(`Cluster with ID ${booking.clusterId} not found`);
+    }
+    const field = await this.fieldModel.findById(booking.fieldId).exec();
+    if (!field) {
+      throw new NotFoundException(`Field with ID ${booking.fieldId} not found`);
+    }
+    let price = 0;
+    let serviceResponse = booking.services || [];
+    for (const service of booking.services) {
+      price += service.price;
+    }
+
+    for (const service of cluster.staticServices) {
+      price += service.price;
+      serviceResponse.push({
+        name: service.name,
+        price: service.price,
+      });
+    }
+
+    const bookings= await this.bookingModel.find({
+      status: { $in: ['pending', 'completed'] },
+      date : booking.date,
+      startHour: booking.startHour,
+      fieldId: booking.fieldId
+    }).exec();
+
+
+
+    let bookingResponse: BookingResponseDto = {
+      bookingId: booking._id,
+      clusterName: cluster.name,
+      fieldName: field.name,
+      date: booking.date,
+      startHour: booking.startHour,
+      address: cluster.address,
+      slot: bookings.length, // số lượng booking trong cùng một slot
+      services: booking.services.map(service => ({
+        name: service.name,
+        price: service.price,
+      })),
+      price: price
+    }
+    return bookingResponse;
   }
 
-  async getAllBookingsByUserId(userId: string): Promise<Booking[]> {
-    return this.bookingModel.find({ userId }).exec();
+  async getAllBookingsByUserId(userId: string): Promise<BookingHistoryDto[]> {
+    const bookings = await this.bookingModel.find({ userId }).exec();
+    if (!bookings) {
+      throw new NotFoundException(`No bookings found for user ID ${userId}`);
+    }
+    const bookingHistory: BookingHistoryDto[] = [];
+    for (const booking of bookings) {
+      const cluster = await this.clusterModel.findById(booking.clusterId).exec();
+      if (!cluster) {
+        throw new NotFoundException(`Cluster with ID ${booking.clusterId} not found`);
+      }
+      const field = await this.fieldModel.findById(booking.fieldId).exec();
+      if (!field) {
+        throw new NotFoundException(`Field with ID ${booking.fieldId} not found`);
+      }
+      bookingHistory.push({
+        bookingId: booking._id,
+        clusterName: cluster.name,
+        fieldName: field.name,
+        date: booking.date,
+        startHour: booking.startHour,
+        address: cluster.address,
+      });
+    }
+    return bookingHistory;
   }
 
   async updateBookingPayment(id: string): Promise<Booking> {

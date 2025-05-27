@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Put, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiTags, ApiOkResponse, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { UserDto } from 'src/auth/dto/user.dto';
+import { PasswordDto } from 'src/auth/dto/password.dto';
 
 @UseGuards(JwtGuard)
 @ApiTags('users')
@@ -46,4 +47,9 @@ export class UserController {
     return this.userService.editUser(id, dto);
   }
   
+  @Patch(':id/password')
+  @ApiOperation({ summary: 'Thay đổi mật khẩu người dùng' })
+  async changePassword(@Param('id') id: string, @Body() dto: PasswordDto) {
+    return this.userService.changePassword(id, dto);
+  }
 }

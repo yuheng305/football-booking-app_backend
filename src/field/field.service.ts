@@ -7,6 +7,8 @@ import { FieldResponseDto } from 'src/auth/dto/fieldresponse.dto';
 import { Booking } from 'src/schemas/booking.schema';
 import { Owner } from 'src/schemas/owner.schema';
 import { Cluster } from 'src/schemas/cluster.schema';
+import { UpdateFieldStatusDto } from 'src/auth/dto/updateFieldStatus.dto';
+import { UpdateHourDto } from 'src/auth/dto/updateHour.dto';
 
 @Injectable()
 export class FieldService {
@@ -51,12 +53,27 @@ export class FieldService {
   //   return field.save();
   // }
 
-  async updateFieldStatus(fieldId: string, isMaintain: boolean): Promise<Field> {
+  async updateFieldStatus(fieldId: string, dto: UpdateFieldStatusDto): Promise<Field> {
     const field = await this.fieldModel.findById(fieldId).exec();
     if (!field) {
       throw new NotFoundException('Field not found');
     }
-    field.isMaintain = isMaintain;
+    field.isMaintain = dto.isMaintain;
+    return field.save();
+  }
+
+  //update field start hour and close hour
+  async updateFieldHours(fieldId: string, dto: UpdateHourDto): Promise<Field> {
+    const field = await this.fieldModel.findById(fieldId).exec();
+    if (!field) {
+      throw new NotFoundException('Field not found');
+    }
+    if (dto.openHour) {
+      field.openHour = dto.openHour;
+    }
+    if (dto.closeHour) {
+      field.closeHour = dto.closeHour;
+    }
     return field.save();
   }
 

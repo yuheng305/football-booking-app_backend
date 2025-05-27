@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Put, UseGuards } from '@nestjs/common';
 import { OwnerService } from './owner.service';
 import { ApiTags, ApiOkResponse, ApiOperation , ApiBearerAuth} from '@nestjs/swagger';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { OwnerDto } from 'src/auth/dto/owner.dto';
+import { PasswordDto } from 'src/auth/dto/password.dto';
 
 
 @UseGuards(JwtGuard)
@@ -50,5 +51,11 @@ export class OwnerController {
   @ApiOperation({ summary: 'Chỉnh sửa thông tin chủ sân theo ID' })
   async editOwner(@Param('id') id: string, @Body() dto: OwnerDto) {
     return this.ownerService.editOwner(id, dto);
+  }
+
+  @Patch(':id/password')
+  @ApiOperation({ summary: 'Thay đổi mật khẩu của chủ sân' })
+  async changePassword(@Param('id') id: string, @Body() dto: PasswordDto) {
+    return this.ownerService.changePassword(id, dto);
   }
 }

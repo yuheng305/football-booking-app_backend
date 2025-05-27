@@ -7,6 +7,8 @@ import { JwtPayLoad } from 'src/common/model/jwt.payload';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { FieldDto } from 'src/auth/dto/field.dto';
 import { FieldResponseDto } from 'src/auth/dto/fieldresponse.dto';
+import { UpdateFieldStatusDto } from 'src/auth/dto/updateFieldStatus.dto';
+import { UpdateHourDto } from 'src/auth/dto/updateHour.dto';
 
 @ApiTags('fields') // <-- trùng với tag ở bước 2
 @UseGuards(JwtGuard)
@@ -54,14 +56,24 @@ export class FieldController {
   //   return this.fieldService.updateFieldToMaintain(fieldId);
   // }
 
-  @Patch(':fieldId')
+  @Patch(':fieldId/status')
   @ApiOperation({ summary: 'Update field status' })
   @ApiResponse({ status: 200, description: 'Field status updated successfully', type: Field })
   async updateFieldToMaintenance(
     @Param('fieldId') fieldId: string,
-    @Body('isMaintain') isMaintain: boolean
+    @Body() dto: UpdateFieldStatusDto 
   ): Promise<Field> {
-    return this.fieldService.updateFieldStatus(fieldId, isMaintain);
+    return this.fieldService.updateFieldStatus(fieldId, dto);
+  }
+
+  @Patch(':fieldId/hour')
+  @ApiOperation({ summary: 'Update field start and close hour' })
+  @ApiResponse({ status: 200, description: 'Field hour updated successfully', type: Field })
+  async updateHourOfField(
+    @Param('fieldId') fieldId: string,
+    @Body() dto: UpdateHourDto 
+  ): Promise<Field> {
+    return this.fieldService.updateFieldHours(fieldId, dto);
   }
 
 
