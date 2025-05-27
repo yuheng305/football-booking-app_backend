@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { OwnerService } from './owner.service';
 import { ApiTags, ApiOkResponse, ApiOperation , ApiBearerAuth} from '@nestjs/swagger';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
@@ -46,7 +46,7 @@ export class OwnerController {
     return this.ownerService.getOwnerById(id);
   }
 
-  @Post(':id/edit')
+  @Put(':id')
   @ApiOperation({ summary: 'Chỉnh sửa thông tin chủ sân theo ID' })
   async editOwner(@Param('id') id: string, @Body() dto: OwnerDto) {
     return this.ownerService.editOwner(id, dto);

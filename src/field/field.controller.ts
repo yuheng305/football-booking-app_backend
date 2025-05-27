@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { FieldService } from './field.service';
 import { Field } from '../schemas/field.schema';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery } from '@nestjs/swagger';
@@ -36,22 +36,32 @@ export class FieldController {
   return this.fieldService.createField(createFieldDto);
 }
 
-  @Post(':fieldId/available')
-  @ApiOperation({ summary: 'Update field to available' })
-  @ApiResponse({ status: 200, description: 'Field updated to available successfully', type: Field })
-  async updateFieldToAvailable(
-    @Param('fieldId') fieldId: string
-  ): Promise<Field> {
-    return this.fieldService.updateFieldToAvailable(fieldId);
-  }
+  // @Patch(':fieldId/available')
+  // @ApiOperation({ summary: 'Update field to available' })
+  // @ApiResponse({ status: 200, description: 'Field updated to available successfully', type: Field })
+  // async updateFieldToAvailable(
+  //   @Param('fieldId') fieldId: string
+  // ): Promise<Field> {
+  //   return this.fieldService.updateFieldToAvailable(fieldId);
+  // }
 
-  @Post(':fieldId/maintenance')
-  @ApiOperation({ summary: 'Update field to maintenance' })
-  @ApiResponse({ status: 200, description: 'Field updated to maintenance successfully', type: Field })
+  // @Patch(':fieldId/maintenance')
+  // @ApiOperation({ summary: 'Update field to maintenance' })
+  // @ApiResponse({ status: 200, description: 'Field updated to maintenance successfully', type: Field })
+  // async updateFieldToMaintenance(
+  //   @Param('fieldId') fieldId: string
+  // ): Promise<Field> {
+  //   return this.fieldService.updateFieldToMaintain(fieldId);
+  // }
+
+  @Patch(':fieldId')
+  @ApiOperation({ summary: 'Update field status' })
+  @ApiResponse({ status: 200, description: 'Field status updated successfully', type: Field })
   async updateFieldToMaintenance(
-    @Param('fieldId') fieldId: string
+    @Param('fieldId') fieldId: string,
+    @Body('isMaintain') isMaintain: boolean
   ): Promise<Field> {
-    return this.fieldService.updateFieldToMaintain(fieldId);
+    return this.fieldService.updateFieldStatus(fieldId, isMaintain);
   }
 
 
@@ -84,7 +94,7 @@ export class FieldController {
     return this.fieldService.getAllFieldsInClusterByDateAndHour(clusterId, date, hour);
   }
 
-  @Get(':ownerId/all')
+  @Get('owner/:ownerId')
   @ApiOperation({ summary: 'Get all fields of a owner' })
   @ApiResponse({ status: 200, description: 'Get all fields of a owner successfully', type: [Field] })
   async getAllFieldsOfOwner(
@@ -94,7 +104,7 @@ export class FieldController {
   }
 
   //delete field
-  @Delete(':fieldId/delete')
+  @Delete(':fieldId')
   @ApiOperation({ summary: 'Delete a field' })
   @ApiResponse({ status: 200, description: 'Field deleted successfully', type: Field })
   async deleteField(

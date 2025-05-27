@@ -33,21 +33,30 @@ export class FieldService {
 
   return newField.save();
 }
-  async updateFieldToAvailable(fieldId: string): Promise<Field> {
-    const field = await this.fieldModel.findById(fieldId).exec();
-    if (!field) {
-      throw new NotFoundException('Field not found');
-    }
-    field.isMaintain = false;
-    return field.save();
-  }
+  // async updateFieldToAvailable(fieldId: string): Promise<Field> {
+  //   const field = await this.fieldModel.findById(fieldId).exec();
+  //   if (!field) {
+  //     throw new NotFoundException('Field not found');
+  //   }
+  //   field.isMaintain = false;
+  //   return field.save();
+  // }
 
-  async updateFieldToMaintain(fieldId: string): Promise<Field> {
+  // async updateFieldToMaintain(fieldId: string): Promise<Field> {
+  //   const field = await this.fieldModel.findById(fieldId).exec();
+  //   if (!field) {
+  //     throw new NotFoundException('Field not found');
+  //   }
+  //   field.isMaintain = true;
+  //   return field.save();
+  // }
+
+  async updateFieldStatus(fieldId: string, isMaintain: boolean): Promise<Field> {
     const field = await this.fieldModel.findById(fieldId).exec();
     if (!field) {
       throw new NotFoundException('Field not found');
     }
-    field.isMaintain = true;
+    field.isMaintain = isMaintain;
     return field.save();
   }
 

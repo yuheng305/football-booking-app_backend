@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards, Post, Query, Delete } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards, Post, Query, Delete, Patch } from '@nestjs/common';
 import { ClusterService } from './cluster.service';
 import { Cluster } from '../schemas/cluster.schema';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
@@ -83,7 +83,7 @@ export class ClusterController {
   }
 
   // Edit static service
-  @Post(':clusterId/static-services/edit')
+  @Patch(':clusterId/static-services')
   @ApiOperation({ summary: 'Chỉnh sửa dịch vụ tĩnh của cụm sân' })
   @ApiResponse({ status: 200, description: 'Dịch vụ tĩnh được chỉnh sửa thành công', type: Cluster })
   async editStaticService(
@@ -95,7 +95,7 @@ export class ClusterController {
   }
 
   // Edit dynamic service
-  @Post(':clusterId/dynamic-services/edit')
+  @Patch(':clusterId/dynamic-services')
   @ApiOperation({ summary: 'Chỉnh sửa dịch vụ động của cụm sân' })
   @ApiResponse({ status: 200, description: 'Dịch vụ động được chỉnh sửa thành công', type: Cluster })
   async editDynamicService(
@@ -107,7 +107,7 @@ export class ClusterController {
   }
 
   //delete dynamic service
-  @Delete(':clusterId/dynamic-services/delete')
+  @Delete(':clusterId/dynamic-services')
   @ApiOperation({ summary: 'Xóa dịch vụ động của cụm sân' })
   @ApiResponse({ status: 200, description: 'Dịch vụ động được xóa thành công', type: Cluster })
   async deleteDynamicService(

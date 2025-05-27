@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { BookingService } from './booking.service';
 import { Booking } from '../schemas/booking.schema';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
@@ -38,7 +38,7 @@ export class BookingController {
     return this.bookingService.createBooking(dto);
   }
 
-  @Post(':bookingId/payment')
+  @Patch(':bookingId/payment')
   @ApiOperation({ summary: 'Update booking payment status from pending to completed after payment' })
   @ApiResponse({ status: 200, description: 'Booking payment status updated', type: Booking })
   async updateBookingPayment(@Param('bookingId') bookingId: string): Promise<Booking> {

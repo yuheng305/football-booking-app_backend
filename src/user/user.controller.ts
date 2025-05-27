@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiTags, ApiOkResponse, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
@@ -40,7 +40,7 @@ export class UserController {
     return this.userService.getUserById(id);
   }
 
-  @Post(':id/edit')
+  @Put(':id')
   @ApiOperation({ summary: 'Chỉnh sửa thông tin người dùng theo ID' })
   async editUser(@Param('id') id: string, @Body() dto: UserDto) {
     return this.userService.editUser(id, dto);
