@@ -128,7 +128,7 @@ export class BookingService {
   }
 
   //get all bookings by ownerId
-  async getAllBookingsByOwnerId(ownerId: string): Promise<Booking[]> {
+  async getAllBookingsByOwnerId(ownerId: string): Promise<BookingHistoryDto[]> {
     const clusters = await this.clusterModel.find({ ownerId: ownerId }).exec();
     const clusterIds = clusters.map(cluster => cluster._id);
     let listField: Field[] = [];
@@ -139,23 +139,87 @@ export class BookingService {
     }
     const fieldIds = listField.map(field => field._id);
 
-    let result: Booking[] = [];
+    let history : BookingHistoryDto[] = [];
 
     for (const fieldId of fieldIds) {
       const bookings = await this.bookingModel.find({ fieldId }).exec();
-      result = result.concat(bookings); // nối mảng thay vì push mảng
+      for (const booking of bookings) {
+        const thisCluster = await this.clusterModel.findById(booking.clusterId).exec();
+        if (!thisCluster) {
+          throw new NotFoundException(`Cluster with ID ${booking.clusterId} not found`);
+        }
+        const thisField = await this.fieldModel.findById(booking.fieldId).exec();
+        if (!thisField) {
+          throw new NotFoundException(`Field with ID ${booking.fieldId} not found`);
+        }
+
+        // const slotBookings = await this.calculateSlotAvailability(booking._id);
+        // const status = slotBookings === 1 ? 'pending' : 'completed';
+
+        history.push({
+          bookingId: booking._id,
+          clusterName: thisCluster.name,
+          fieldName: thisField.name,
+          date: booking.date,
+          startHour: booking.startHour,
+          address: thisCluster.address,
+          status: booking.status,
+        }); 
+      }
     }
-    return result;
+    return history;
   }
 
-  async getAllCompletedBookingsByOwnerId(clusterId: string): Promise<Booking[]> {
+  //get all upcoming bookings by ownerId
+  async getAllUpcomingBookingsByOwnerId(clusterId: string): Promise<BookingHistoryDto[]> {
     const bookings = await this.getAllBookingsByOwnerId(clusterId);
-    return bookings.filter(booking => booking.status === 'completed');
+    // compare the date and startHour to filter upcoming bookings
+    const currentDate = new Date();
+    return bookings.filter(booking => {
+      const bookingDate = new Date(booking.date);
+      const bookingStartHour = booking.startHour;
+      // Check if the booking date is in the future or today with a later start hour
+      return (
+        bookingDate > currentDate 
+      || (bookingDate.toDateString() === currentDate.toDateString() && bookingStartHour > currentDate.getHours())
+      )
+      && booking.status === 'completed';
+    });
   }
 
-  async getAllPendingBookingsByOwnerId(clusterId: string): Promise<Booking[]> {
+  async getAllCompletedBookingsByOwnerId(clusterId: string): Promise<BookingHistoryDto[]> {
+    const bookings = await this.getAllBookingsByOwnerId(clusterId);
+    //compare the date and startHour to filter completed bookings
+    const currentDate = new Date();
+    return bookings.filter(booking => {
+      const bookingDate = new Date(booking.date);
+      const bookingStartHour = booking.startHour;
+      // Check if the booking date is in the past or today with an earlier start hour
+      return (
+        bookingDate < currentDate 
+      || (bookingDate.toDateString() === currentDate.toDateString() && bookingStartHour < currentDate.getHours())
+      )
+      && booking.status === 'completed';
+    });
+  }
+
+  async getAllPendingBookingsByOwnerId(clusterId: string): Promise<BookingHistoryDto[]> {
     const bookings = await this.getAllBookingsByOwnerId(clusterId);
     return bookings.filter(booking => booking.status === 'pending');
   }
 
+  //calculate slot availability
+  // async calculateSlotAvailability(bookingId: any): Promise<number> {
+  //   const booking = await this.bookingModel.findById(bookingId).exec();
+  //   if (!booking) {
+  //     throw new NotFoundException(`Booking with ID ${bookingId} not found`);
+  //   }
+  //   const bookings = await this.bookingModel.find({
+  //     status: { $in: ['pending', 'completed'] },
+  //     date: booking.date,
+  //     startHour: booking.startHour,
+  //     fieldId: booking.fieldId
+  //   }).exec();
+  //   return bookings.length; // trả về số lượng booking trong cùng một slot
+  // }
 }

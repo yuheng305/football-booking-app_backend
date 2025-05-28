@@ -16,4 +16,7 @@ export class BookingHistoryDto {
     //địa chỉ cụm sân
     @ApiProperty({ example: '123 Đường ABC, Quận 1, TP.HCM', description: 'Địa chỉ cụm sân' })
     address: string;
+
+    @ApiProperty({ example: 'pending', description: 'Trạng thái của booking (pending, completed)' })
+    status?: string;
 }
