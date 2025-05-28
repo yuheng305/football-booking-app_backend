@@ -25,8 +25,12 @@ export class ClusterService {
     return cluster;
   }
 
-  async getClusterById(id: string) {
-    return this.clusterModel.find({ ownerID: id }).exec();
+  async getClusterByOwnerId(id: string) {
+    const cluster = await this.clusterModel.findOne({ ownerId: id }).exec();
+    if (!cluster) {
+      throw new NotFoundException('Cluster not found');
+    }
+    return cluster;
   }
 
   async addStaticServiceToCluster(clusterId: string, name: string, price: number) {

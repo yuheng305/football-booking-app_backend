@@ -3,6 +3,16 @@ import { ServiceEntryDto } from './booking.dto';
 
 export class BookingResponseDto {
 
+    //userName
+    @ApiProperty({ example: 'john_doe', description: 'Tên người dùng đã đặt sân' })
+    userName: string;
+    //phoneNumber
+    @ApiProperty({ example: '0123456789', description: 'Số điện thoại của người dùng đã đặt sân' })
+    phoneNumber: string;
+    //email
+    @ApiProperty({ example: 'cp@gmail.com', description: 'Email của người dùng đã đặt sân' })
+    email: string;
+
     //bookingId
     @ApiProperty({ example: '60c72b2f9b1e8c001c8e4d5a', description: 'ID của booking' })
     bookingId: any;

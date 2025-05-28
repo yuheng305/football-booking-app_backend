@@ -8,6 +8,7 @@ import { Cluster } from 'src/schemas/cluster.schema';
 import { Field } from 'src/schemas/field.schema';
 import { BookingResponseDto } from 'src/auth/dto/bookingresponse.dto';
 import { BookingHistoryDto } from 'src/auth/dto/bookinghistory.dto';
+import { User } from 'src/schemas/user.schema';
 
 @Injectable()
 export class BookingService {
@@ -16,6 +17,7 @@ export class BookingService {
     @InjectModel(Owner.name) private ownerModel: Model<Owner>,
     @InjectModel(Cluster.name) private clusterModel: Model<Cluster>,
     @InjectModel(Field.name) private fieldModel: Model<Field>,
+    @InjectModel(User.name) private userModel: Model<User>,
   ) {}
 
   async getAllBookings(): Promise<Booking[]> {
@@ -51,6 +53,13 @@ export class BookingService {
     if (!field) {
       throw new NotFoundException(`Field with ID ${booking.fieldId} not found`);
     }
+
+    //user
+    const user = await this.userModel.findById(booking.userId).exec();
+    if (!user) {
+      throw new NotFoundException(`User with ID ${booking.userId} not found`);
+    }
+
     let price = 0;
     let serviceResponse = booking.services || [];
     for (const service of booking.services) {
@@ -75,6 +84,9 @@ export class BookingService {
 
 
     let bookingResponse: BookingResponseDto = {
+      userName: user.fullName,
+      phoneNumber: user.phone,
+      email: user.email,
       bookingId: booking._id,
       clusterName: cluster.name,
       fieldName: field.name,

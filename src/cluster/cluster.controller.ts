@@ -42,8 +42,8 @@ export class ClusterController {
   @Get('/owner/:ownerId')
   @ApiOperation({ summary: 'Lấy thông tin cụm sân theo ownerID' })
   @ApiResponse({ status: 200, description: 'Thông tin cụm sân trả về thành công', type: Cluster })
-  async getById(@Param('id') id: string): Promise<Cluster[]> {
-    return this.clusterService.getClusterById(id);
+  async getByOwnerId(@Param('ownerId') ownerId: string): Promise<Cluster> {
+    return this.clusterService.getClusterByOwnerId(ownerId);
   }
 
   @Get(':clusterId/static-services')
