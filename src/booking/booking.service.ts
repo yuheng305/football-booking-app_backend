@@ -234,4 +234,13 @@ export class BookingService {
   //   }).exec();
   //   return bookings.length; // trả về số lượng booking trong cùng một slot
   // }
+
+  //delete booking by bookingId
+  async deleteBookingById(bookingId: string): Promise<void> {
+    const booking = await this.bookingModel.findById(bookingId).exec();
+    if (!booking) {
+      throw new NotFoundException(`Booking with ID ${bookingId} not found`);
+    }
+    await this.bookingModel.deleteOne({ _id: bookingId }).exec();
+  }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { BookingService } from './booking.service';
 import { Booking } from '../schemas/booking.schema';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
@@ -83,5 +83,13 @@ export class BookingController {
   @ApiResponse({ status: 200, description: 'List of pending bookings for the owner', type: [BookingHistoryDto] })
   async getAllPendingBookingsByOwnerId(@Param('ownerId') ownerId: string): Promise<BookingHistoryDto[]> {
     return this.bookingService.getAllPendingBookingsByOwnerId(ownerId);
+  }
+
+  //delete booking by bookingId
+  @Delete(':bookingId')
+  @ApiOperation({ summary: 'Delete booking by booking ID' })
+  @ApiResponse({ status: 200, description: 'Booking deleted successfully' })
+  async deleteBooking(@Param('bookingId') bookingId: string): Promise<void> {
+    return this.bookingService.deleteBookingById(bookingId);
   }
 }
