@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Field } from '../schemas/field.schema';
 import { FieldDto } from 'src/auth/dto/field.dto';
 import { FieldResponseDto } from 'src/auth/dto/fieldresponse.dto';
@@ -9,6 +9,7 @@ import { Owner } from 'src/schemas/owner.schema';
 import { Cluster } from 'src/schemas/cluster.schema';
 import { UpdateFieldStatusDto } from 'src/auth/dto/updateFieldStatus.dto';
 import { UpdateHourDto } from 'src/auth/dto/updateHour.dto';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class FieldService {
@@ -99,11 +100,17 @@ export class FieldService {
       date : date,
       startHour: hour,
     }).exec();
+    // console.log('Bookings:');
+    // console.log('Bookings:', bookings);
     let fieldResponses: FieldResponseDto[] = [];
     for( const field of fields) {
       let slotbooked:number=0;
       for (const booking of bookings) {
-        if (booking.fieldId.toString() === field._id && booking.status !== 'canceled') {
+        let bookingFieldId = new ObjectId(booking.fieldId);
+        // console.log('Booking Field ID:', bookingFieldId);
+        // console.log('Field ID:', field._id);
+        const fieldId = field._id as Types.ObjectId;
+        if (bookingFieldId.equals(fieldId) && booking.status !== 'canceled') {
           slotbooked++; 
         }
       }

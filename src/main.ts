@@ -1,6 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import "./instrument"; // Import Sentry instrumentation
+import { SentryExceptionFilter } from './exception/SentryExceptionFilter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -19,6 +21,8 @@ async function bootstrap() {
     .addTag('owners') // tag này để nhóm các endpoint
     .addTag('auth') // tag này để nhóm các endpoint
     .build();
+
+  app.useGlobalFilters(new SentryExceptionFilter()); // Register Sentry exception filter
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document); // <-- http://localhost:3000/api
