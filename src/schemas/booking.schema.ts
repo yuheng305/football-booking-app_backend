@@ -18,7 +18,7 @@ export class Booking extends Document {
   @Prop({ default: 'pending' }) status: 'pending' | 'completed' | 'canceled';
   @Prop([ServiceEntry]) services: ServiceEntry[];
   @Prop() qrCode: string;
-  @Prop({required: true }) slotOfBooking: number;
+  // @Prop({required: true }) slotOfBooking: number;
 }
 
 export const BookingSchema = SchemaFactory.createForClass(Booking);
