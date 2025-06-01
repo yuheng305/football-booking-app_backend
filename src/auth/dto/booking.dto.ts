@@ -30,4 +30,8 @@ export class BookingDto {
     @ApiProperty({ type: [ServiceEntryDto], description: 'Danh sách dịch vụ đi kèm' })
     services: ServiceEntryDto[];
 
+    //half field booking or full field booking
+    @ApiProperty({ example: 1, description: 'Số lượng slot booking (1 cho nửa sân, 2 cho cả sân)' })
+    slotOfBooking: number;
+
 }

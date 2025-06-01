@@ -37,6 +37,7 @@ export class BookingService {
       name: service.name,
       price: service.price,
     }));
+    booking.slotOfBooking = dto.slotOfBooking; // nửa sân hay cả sân
     return booking.save();
   }
 
@@ -125,6 +126,7 @@ export class BookingService {
         date: booking.date,
         startHour: booking.startHour,
         address: cluster.address,
+        status: booking.status,
       });
     }
     return bookingHistory;

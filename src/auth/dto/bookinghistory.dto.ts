@@ -18,5 +18,5 @@ export class BookingHistoryDto {
     address: string;
 
     @ApiProperty({ example: 'pending', description: 'Trạng thái của booking (pending, completed)' })
-    status?: string;
+    status: string;
 }
