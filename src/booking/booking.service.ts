@@ -125,6 +125,7 @@ export class BookingService {
         date: booking.date,
         startHour: booking.startHour,
         address: cluster.address,
+        status: booking.status,
       });
     }
     return bookingHistory;
